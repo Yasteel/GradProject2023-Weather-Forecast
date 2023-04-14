@@ -21,6 +21,8 @@ namespace WeatherForcast.WebAPIController
             this.cache = cache;
             this.apiRequest = apiRequest;
         }
+
+        [HttpGet]
         public async Task<object> GetForecast(DataSourceLoadOptions loadOptions, ForecastOptionsModel model)
         {
             ApiRootObjectModel apiData;

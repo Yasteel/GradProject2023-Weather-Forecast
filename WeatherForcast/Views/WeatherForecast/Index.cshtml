@@ -1,29 +1,35 @@
-﻿<p>Test</p>
+﻿<h3>Weather Forecast</h3>
 
 @(
 Html.DevExtreme().DataGrid<ForecastDayModel>()
     .ID("forecastsDataGrid")
     .ShowBorders(true)
-    .Paging(paging => paging.Enabled(false))
-    .Sorting(sorting => sorting.Mode(GridSortingMode.Multiple))
+    .Paging(paging => paging.Enabled(true))
+    .Sorting(sorting => sorting.Mode(GridSortingMode.Single))
     .RemoteOperations(true)
     .DataSource(d => d.Mvc().Controller("WeatherForecastWebAPI").LoadAction("GetForecast"))
     .Columns(cols =>
     {
         cols.AddFor(_ => _.Date)
-        .GroupIndex(1);
-       
-        cols.AddFor(_ => _.Day.Mintemp_c);
+            .Caption("Date");
 
-        cols.AddFor(_ => _.Day.Avgtemp_c);
+        cols.AddFor(_ => _.Day.Mintemp_c)
+        .Caption("Min Temperature");
 
-        cols.AddFor(_ => _.Day.Maxtemp_c);
+        cols.AddFor(_ => _.Day.Avgtemp_c)
+        .Caption("Avg Temperature");
 
-        cols.AddFor(_ => _.Day.Avghumidity);
+        cols.AddFor(_ => _.Day.Maxtemp_c)
+        .Caption("Max Temperature");
 
-        cols.AddFor(_ => _.Day.Totalprecip_mm);
+        cols.AddFor(_ => _.Day.Avghumidity)
+        .Caption("Avg Humidity");
 
-        cols.AddFor(_ => _.Day.Condition.Text);
+        cols.AddFor(_ => _.Day.Totalprecip_mm)
+        .Caption("Total Precipitation");
+
+        cols.AddFor(_ => _.Day.Condition.Text)
+        .Caption("Weather Condition");
 
     })
 )

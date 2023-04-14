@@ -41,7 +41,7 @@
             if (!result.IsValid)
             {
                 result.AddToModelState(this.ModelState);
-                return RedirectToAction("Index");
+                return this.BadRequest();
             }
 
             ApiRootObjectModel apiData;

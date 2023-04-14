@@ -16,10 +16,10 @@
                 .WithMessage("Location Must be Under 40 Characters.");
 
             this.RuleFor(_ => _.Days)
+                .NotEmpty()
+                .WithMessage("Field Cannot be Left Empty")
                 .GreaterThan(0)
-                .WithMessage("Days Cannot be 0")
-                .LessThanOrEqualTo(3)
-                .WithMessage("This is from a free API that supports up to 3 days of Forecast Data");
+                .WithMessage("Days Cannot be 0");
         }
     }
 }
