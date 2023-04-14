@@ -4,5 +4,17 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    
 </div>
+
+@using (Html.BeginForm())
+{
+    @(
+    Html.DevExtreme().Form<ForecastOptionsModel>()
+                .Items(items =>
+                {
+                    items.AddSimpleFor(_ => _.Location);
+                    items.AddSimpleFor(_ => _.Days);
+                })
+    )
+    <button class="btn btn-success mt-5" type="submit" asp-controller="Home" asp-action="Submit">Get Forecast</button>
+}

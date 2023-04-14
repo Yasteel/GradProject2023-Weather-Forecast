@@ -1,7 +1,21 @@
+using FluentValidation;
+using WeatherForcast.Models;
+using WeatherForcast.Services;
+using WeatherForcast.Validators;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+
+builder.Services.AddScoped<IValidator<ForecastOptionsModel>, ForecastOptionsValidator>();
+
+builder.Services.AddHttpClient();
+
+builder.Services.AddSingleton<ApiRequestService>();
+builder.Services.AddSingleton<CacheService>();
+
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

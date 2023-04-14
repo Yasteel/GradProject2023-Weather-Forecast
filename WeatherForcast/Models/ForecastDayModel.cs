@@ -6,8 +6,6 @@
 
         public DayModel Day { get; set; }
 
-        public AstroModel Astro { get; set; }
-
         public HourModel[] Hour { get; set; }
     }
 }

@@ -1,0 +1,29 @@
+﻿<p>Test</p>
+
+@(
+Html.DevExtreme().DataGrid<ForecastDayModel>()
+    .ID("forecastsDataGrid")
+    .ShowBorders(true)
+    .Paging(paging => paging.Enabled(false))
+    .Sorting(sorting => sorting.Mode(GridSortingMode.Multiple))
+    .RemoteOperations(true)
+    .DataSource(d => d.Mvc().Controller("WeatherForecastWebAPI").LoadAction("GetForecast"))
+    .Columns(cols =>
+    {
+        cols.AddFor(_ => _.Date)
+        .GroupIndex(1);
+       
+        cols.AddFor(_ => _.Day.Mintemp_c);
+
+        cols.AddFor(_ => _.Day.Avgtemp_c);
+
+        cols.AddFor(_ => _.Day.Maxtemp_c);
+
+        cols.AddFor(_ => _.Day.Avghumidity);
+
+        cols.AddFor(_ => _.Day.Totalprecip_mm);
+
+        cols.AddFor(_ => _.Day.Condition.Text);
+
+    })
+)
