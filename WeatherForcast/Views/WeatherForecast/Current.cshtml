@@ -1,0 +1,23 @@
+﻿@model WeatherForcast.Models.CurrentModel
+
+<h3 class="mb-3">Current Weather</h3>
+
+@(
+Html.DevExtreme().Form<CurrentModel>()
+    .ID("currentForecastContainer")
+    .ColCount(2)
+    .Width(600)
+    .Items(item =>
+    {
+        item.AddSimpleFor(_ => _.Temp_c);
+        item.AddSimpleFor(_ => _.Feelslike_c);
+        item.AddSimpleFor(_ => _.Wind_dir);
+        item.AddSimpleFor(_ => _.Wind_kph);
+        item.AddSimpleFor(_ => _.Pressure_mb);
+        item.AddSimpleFor(_ => _.Precip_mm);
+        item.AddSimpleFor(_ => _.Humidity);
+        item.AddSimpleFor(_ => _.Condition.Text).Label(_ => _.Text("Condition"));
+
+
+    })
+)

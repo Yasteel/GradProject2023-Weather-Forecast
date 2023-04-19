@@ -1,0 +1,20 @@
+﻿@model WeatherForcast.Models.LocationModel
+
+<h3 class="mb-3">Location Data</h3>
+
+@(
+Html.DevExtreme().Form<LocationModel>()
+    .ColCount(1)
+    .Width(600)
+    .ID("FormContainer")
+    .Disabled(true)
+    .Items(item =>
+    {
+        item.AddSimpleFor(_ => _.Name);
+        item.AddSimpleFor(_ => _.Region);
+        item.AddSimpleFor(_ => _.Country);
+        item.AddSimpleFor(_ => _.Localtime);
+    })
+    @*.FormData(Model)*@ // can have this instead of above items to display all data from the model
+    
+)
