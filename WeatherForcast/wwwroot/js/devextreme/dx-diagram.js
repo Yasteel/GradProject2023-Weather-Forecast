@@ -1,7 +1,7 @@
 /*!
  * DevExpress Diagram (dx-diagram)
- * Version: 2.1.68
- * Build date: Wed Jan 04 2023
+ * Version: 2.1.72
+ * Build date: Wed Mar 01 2023
  * 
  * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
  * Read about DevExpress licensing here: https://www.devexpress.com/Support/EULAs
@@ -1138,7 +1138,7 @@ var EventUtils = (function () {
         return window.PointerEvent;
     };
     EventUtils.isMousePointer = function (evt) {
-        return this.isPointerEvents() && evt.pointerType && evt.pointerType === "mouse";
+        return this.isPointerEvents() && ((evt.pointerType && evt.pointerType === "mouse") || (browser_1.Browser.Firefox && evt.type === "click"));
     };
     EventUtils.isTouchMode = function () {
         return browser_1.Browser.TouchUI || (window.navigator && window.navigator.maxTouchPoints > 0);
@@ -17838,6 +17838,7 @@ var MouseHandlerDragDiagramItemStateBase = (function (_super) {
         if (evt.button !== Event_1.MouseButton.Left) {
             this.cancelChanges();
             this.handler.switchToDefaultState();
+            return;
         }
         if (!this.canApplyChangesOnMouseMove(this.startPoint, evt.modelPoint))
             return;
@@ -34158,7 +34159,7 @@ var History = (function () {
             var ti = items.pop();
             ti.undo(this.modelManipulator);
             if (ti === item)
-                return;
+                break;
         }
         this.diagram.endUpdateCanvas();
     };
@@ -34552,7 +34553,10 @@ var RenderManager = (function () {
     };
     RenderManager.prototype.onContextMenu = function (evt) {
         var _this = this;
-        Utils_1.raiseEvent(evt, this.createDiagramContextMenuEvent(evt), function (e) { return _this.events.onContextMenu(e); });
+        if (!this.contextMenuEnabled)
+            return;
+        if (evt.buttons !== 1)
+            Utils_1.raiseEvent(evt, this.createDiagramContextMenuEvent(evt), function (e) { return _this.events.onContextMenu(e); });
         this.input.captureFocus();
         return evt_1.EvtUtils.preventEventAndBubble(evt);
     };

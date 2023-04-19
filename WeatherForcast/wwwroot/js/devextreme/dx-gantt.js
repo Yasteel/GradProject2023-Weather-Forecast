@@ -1,9 +1,9 @@
 /*!
  * DevExpress Gantt (dx-gantt)
- * Version: 4.1.39
- * Build date: Fri Dec 23 2022
+ * Version: 4.1.42
+ * Build date: Mon Feb 06 2023
  * 
- * Copyright (c) 2012 - 2022 Developer Express Inc. ALL RIGHTS RESERVED
+ * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
  * Read about DevExpress licensing here: https://www.devexpress.com/Support/EULAs
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -5794,6 +5794,8 @@ var GanttView = (function () {
     };
     GanttView.prototype.getAllVisibleTaskIndices = function (start, end) { return this.viewModel.getAllVisibleTaskIndices(start, end); };
     GanttView.prototype.getVisibleDependencyKeysByTaskRange = function (indices) {
+        if (!this.settings.showDependencies)
+            return [];
         var model = this.viewModel;
         var taskKeys = indices.map(function (i) { return model.tasks.items[i].internalId; });
         var dependencies = model.dependencies.items;
@@ -6145,12 +6147,16 @@ var GanttView = (function () {
         var activeDialog = DialogBase_1.DialogBase.activeInstance;
         if (activeDialog && activeDialog.canRefresh && activeDialog.getDialogName() === "TaskEdit")
             activeDialog.refresh();
+        this.dispatcher.notifyGanttViewUpdated();
     };
     GanttView.prototype.onBrowserWindowResize = function () {
         if (this.fullScreenModeHelper.isInFullScreenMode)
             this.fullScreenModeHelper.adjustControlInFullScreenMode();
         else
             this.adjustOwnerControl();
+    };
+    GanttView.prototype.getTaskTreeLine = function (taskKey) {
+        return this.viewModel.getTaskTreeLine(taskKey).reverse();
     };
     GanttView.prototype.setTaskValue = function (id, fieldName, newValue) {
         var command = this.commandManager.updateTaskCommand;
@@ -6178,6 +6184,8 @@ var GanttView = (function () {
     };
     GanttView.prototype.getPrevTask = function (taskId) {
         var item = this.viewModel.findItem(taskId);
+        if (!item)
+            return null;
         var parent = item.parent || this.viewModel.root;
         var index = parent.children.indexOf(item) - 1;
         return index > -1 ? item.parent.children[index].task : item.parent.task;
@@ -13739,6 +13747,9 @@ var ModelChangesDispatcher = (function () {
     ModelChangesDispatcher.prototype.notifyScaleCellPrepared = function (data) {
         this.onModelChanged.raise("NotifyScaleCellPrepared", data);
     };
+    ModelChangesDispatcher.prototype.notifyGanttViewUpdated = function () {
+        this.onModelChanged.raise("NotifyGanttViewUpdated");
+    };
     ModelChangesDispatcher.prototype.fireResourceUnassigning = function (assignment) {
         var args = new ResourceUnassigningArguments_1.ResourceUnassigningArguments(assignment);
         this.notifyResourceUnassigning(args);
@@ -19638,6 +19649,14 @@ var ViewVisualModel = (function () {
             while (item === null || item === void 0 ? void 0 : item.task) {
                 result.push(item === null || item === void 0 ? void 0 : item.task.internalId);
                 item = item.parent;
+            }
+        }
+        else {
+            var task = this.tasks.getItemById(taskId);
+            var parent_1 = this.tasks.getItemById(task === null || task === void 0 ? void 0 : task.parentId);
+            while (parent_1) {
+                result.push(parent_1.id);
+                parent_1 = this.tasks.getItemById(parent_1.parentId);
             }
         }
         return result;
